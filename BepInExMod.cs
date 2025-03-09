@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Logging;
+
 using HarmonyLib;
+
+using System;
+using System.Reflection;
+
 using UnityEngine;
 
 
 namespace IronRebellionTelemetry
 {
-    [BepInPlugin("776784", "IronRebellionTelemetry", "1.0")]
+    [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
     internal class BepInExPlugin : BaseUnityPlugin
     {
         internal static new ManualLogSource Log;

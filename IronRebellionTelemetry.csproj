@@ -2,31 +2,40 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Nullable>enable</Nullable>
+	  <AssemblyName>IronRebellionTelemetry</AssemblyName>
+	  <Product>Iron Rebellion Telemetry</Product>
+	  <Version>0.1.2</Version>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  <LangVersion>latest</LangVersion>
+	  <RestoreAdditionalProjectSources>
+		  https://api.nuget.org/v3/index.json;
+		  https://nuget.bepinex.dev/v3/index.json;
+		  https://nuget.samboy.dev/v3/index.json
+	  </RestoreAdditionalProjectSources>
+	  <RootNamespace>IronRebellionTelemetry</RootNamespace>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
+    
+  <ItemGroup>
+    <Compile Remove="lib\**" />
+    <EmbeddedResource Remove="lib\**" />
+    <None Remove="lib\**" />
+  </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Iron Rebellion Beta\BepInEx\core\0Harmony.dll</HintPath>
-    </Reference>
+    <None Remove=".gitignore" />
+  </ItemGroup>
+<ItemGroup>
+  <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+  <PackageReference Include="BepInEx.Core" Version="5.*" />
+  <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+  <PackageReference Include="UnityEngine.Modules" Version="2021.3.6" IncludeAssets="compile" />
+</ItemGroup>
+  <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Iron Rebellion Beta\Iron Rebellion_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>lib\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="BepInEx">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Iron Rebellion Beta\BepInEx\core\BepInEx.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Iron Rebellion Beta\Iron Rebellion_Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Iron Rebellion Beta\Iron Rebellion_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Iron Rebellion Beta\Iron Rebellion_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Iron Rebellion Beta\Iron Rebellion_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
+   
   </ItemGroup>
 
 </Project>

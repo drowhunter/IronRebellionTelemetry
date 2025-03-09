@@ -1,0 +1,1 @@
+copy Assembly-CSharp.dll from `[GameDir]\Iron Rebellion_Data\Managed` into this folder
