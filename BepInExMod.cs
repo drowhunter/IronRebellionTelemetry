@@ -30,6 +30,8 @@ namespace IronRebellionTelemetry
         public static bool mechOn = false;
         public static bool stage4Booted = false;
 
+        public static bool gameRunning = false;
+
         // Variables which are very shortly true, needs to be checked that the thread read it true value at least once
         public static bool stompedSend = false;
         public static bool landedSend = false;
@@ -112,6 +114,13 @@ namespace IronRebellionTelemetry
                     BepInExPlugin.weaponFired = false;
                     BepInExPlugin.weaponFiredSend = false;
                 }
+
+                // Reset rotation if inside lobby
+                if (!PlayerRig.rigInstance.transform.parent)
+                {
+                    rotationX = 0f;
+                    rotationZ = 0f;
+                }
             }
 
             private static float NormalizeAngle(float angle)
@@ -145,7 +154,6 @@ namespace IronRebellionTelemetry
             private static void PostfixPlayStompSound()
             {
                 BepInExPlugin.stomped = true;
-                Log.LogInfo($"Stomp detected");
             }
 
             [HarmonyPatch(typeof(CockpitAnimationSounds), "StartFlyingSound")]
@@ -207,6 +215,80 @@ namespace IronRebellionTelemetry
                 BepInExPlugin.weaponFired = true;
             }
         }
+
+        /*
+        // If a game ends reset the rotation to zero (otherwise it can happen that you hanging in the chair in death position while in the menu
+
+        [HarmonyPatch(typeof(Match_Gamemode_Conquest), "GameEnd")]
+        public class ConquestEndDetector
+        {
+            [HarmonyPrefix]
+            public static void PrefixGameEnd(Match_Gamemode_Conquest __instance)
+            {
+                if (!__instance.exiting)
+                {
+                    rotationX = 0f;
+                    rotationZ = 0f;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(Match_Gamemode_DataCap), "GameEnd")]
+        public class DataCapEndDetector
+        {
+            [HarmonyPrefix]
+            public static void PrefixGameEnd(Match_Gamemode_DataCap __instance)
+            {
+                if (!__instance.exiting)
+                {
+                    rotationX = 0f;
+                    rotationZ = 0f;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(Match_Gamemode_StrikePoint), "GameEnd")]
+        public class StrikePointndDetector
+        {
+            [HarmonyPrefix]
+            public static void PrefixGameEnd(Match_Gamemode_StrikePoint __instance)
+            {
+                if (!__instance.exiting)
+                {
+                    rotationX = 0f;
+                    rotationZ = 0f;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(Match_Gamemode_TeamDeathmatch), "GameEnd")]
+        public class TeamDeathmatchDetector
+        {
+            [HarmonyPrefix]
+            public static void PrefixGameEnd(Match_Gamemode_TeamDeathmatch __instance)
+            {
+                if (!__instance.exiting)
+                {
+                    rotationX = 0f;
+                    rotationZ = 0f;
+                }
+            }
+        }
+
+        [HarmonyPatch(typeof(Match_Gamemode_Team_PointCapture), "GameEnd")]
+        public class Team_PointCaptureDetector
+        {
+            [HarmonyPrefix]
+            public static void PrefixGameEnd(Match_Gamemode_Team_PointCapture __instance)
+            {
+                if (!__instance.exiting)
+                {
+                    rotationX = 0f;
+                    rotationZ = 0f;
+                }
+            }
+        }
+        */
 
         /*
         [HarmonyPatch(typeof(ControlPanelControls))]
