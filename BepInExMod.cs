@@ -81,9 +81,9 @@ namespace IronRebellionTelemetry
                 BepInExPlugin.angularY = localAngularVelocity.y;
                 BepInExPlugin.angularZ = localAngularVelocity.z;
  
-                BepInExPlugin.rotationX = cockpitTransform.rotation.eulerAngles.x;
+                BepInExPlugin.rotationX = NormalizeAngle(cockpitTransform.rotation.eulerAngles.x);
                 BepInExPlugin.rotationY = cockpitTransform.rotation.eulerAngles.y;
-                BepInExPlugin.rotationZ = cockpitTransform.rotation.eulerAngles.z;
+                BepInExPlugin.rotationZ = NormalizeAngle(cockpitTransform.rotation.eulerAngles.z);
                 
                 //Accessing private field
                 BepInExPlugin.currentTilt = (float)currentTiltField.GetValue(__instance);
@@ -111,6 +111,11 @@ namespace IronRebellionTelemetry
                     BepInExPlugin.weaponFired = false;
                     BepInExPlugin.weaponFiredSend = false;
                 }
+            }
+
+            private static float NormalizeAngle(float angle)
+            {
+                return (angle > 180f) ? angle - 360f : angle;
             }
 
             [HarmonyPatch(typeof(CockpitAnimationManager), "SetLean", new Type[] { typeof(float) })]
