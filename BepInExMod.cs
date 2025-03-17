@@ -4,9 +4,13 @@ using BepInEx.Logging;
 using HarmonyLib;
 
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
+using System.Timers;
 
 using UnityEngine;
+using UnityEngine.Analytics;
 
 
 namespace IronRebellionTelemetry
@@ -34,15 +38,33 @@ namespace IronRebellionTelemetry
         public static bool landedSend = false;
         public static bool jumpedSend = false;
         public static bool weaponFiredSend = false;
-        
 
+        private static TelemetrySender tsender;
+        
         private void Awake()
         {
             Log = Logger;
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
             Log.LogInfo("Finished patching.");
+            
+            //tsender = new TelemetrySender();
+
             TelemetrySender.Start();
+
             Log.LogInfo("Started Telemetry Sender.");
+        }
+
+        //private void FixedUpdate()
+        //{
+            
+        //    tsender?.SendTelemetry(telemetry);
+            
+        //}
+
+        private void OnDestroy()
+        {
+            //tsender.Stop();
+            Log.LogInfo("Stopped Telemetry Sender.");
         }
 
         // RB Telemetry
@@ -67,6 +89,8 @@ namespace IronRebellionTelemetry
                 Vector3 localVelocity = cockpitTransform.InverseTransformDirection(cockpitRB.velocity);
                 Vector3 localAngularVelocity = cockpitTransform.InverseTransformDirection(cockpitRB.angularVelocity);
 
+                telemetry.speed = localVelocity.magnitude;
+
                 telemetry.velocityX = localVelocity.x;
                 telemetry.velocityY = localVelocity.y;
                 telemetry.velocityZ = localVelocity.z;
@@ -87,6 +111,7 @@ namespace IronRebellionTelemetry
                 {
                     telemetry.stomped = false;
                     stompedSend = false;
+                    //telemetry.stompedFoot = 0;
                 }
 
                 if (landedSend)
@@ -135,7 +160,9 @@ namespace IronRebellionTelemetry
             }
         }
 
+        private static float previousFoot = 0;
 
+        
         // Shaking
 
         [HarmonyPatch(typeof(CockpitAnimationSounds), "PlayStompSound")]
@@ -146,6 +173,9 @@ namespace IronRebellionTelemetry
             private static void PostfixPlayStompSound()
             {
                 telemetry.stomped = true;
+                telemetry.stompedFoot = previousFoot >= 0 ? -1 : 1;
+                previousFoot = telemetry.stompedFoot;
+
             }
 
             [HarmonyPatch(typeof(CockpitAnimationSounds), "StartFlyingSound")]

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace IronRebellionTelemetry
 {
-    public class TelemetrySender : IDisposable
+    public class TelemetrySender //: IDisposable
     {
         private static Thread senderThread;
         private static bool isRunning = false;
@@ -25,6 +25,8 @@ namespace IronRebellionTelemetry
         private static int weaponFiredIterations = 6;
         private static int weaponFiredCounter = 0;
 
+
+        
         public static void Start()
         {
             if (isRunning) return;
@@ -51,42 +53,43 @@ namespace IronRebellionTelemetry
             {
                 try
                 {
-                    var data = ToBytes(BepInExPlugin.telemetry);
+                    TelemetryData telemetry = BepInExPlugin.telemetry;
+                    var data = ToBytes(telemetry);
 
                     udpClient.Send(data, data.Length, targetIP, port);
 
-                    if (BepInExPlugin.telemetry.stomped)                    
+                    if (telemetry.stomped)
+                    {
                         stompedCounter++;
+                        BepInExPlugin.telemetry.stompedFoot = MathF.Sign(BepInExPlugin.telemetry.stompedFoot) * ((stompedIterations - stompedCounter)/stompedIterations);
+                    }
                     
-                    if (BepInExPlugin.telemetry.landed)                    
-                        landedCounter++;
+                    if (telemetry.landed) landedCounter++;
                     
-                    if (BepInExPlugin.telemetry.jumped)                    
-                        jumpedCounter++;
+                    if (telemetry.jumped) jumpedCounter++;
                     
-                    if (BepInExPlugin.telemetry.weaponFired)                    
-                        weaponFiredCounter++;
+                    if (telemetry.weaponFired) weaponFiredCounter++;
                     
 
-                    if (BepInExPlugin.telemetry.stomped && stompedCounter > stompedIterations)
+                    if (telemetry.stomped && stompedCounter > stompedIterations)
                     {
                         BepInExPlugin.stompedSend = true;
                         stompedCounter = 0;
                     }
 
-                    if (BepInExPlugin.telemetry.landed && landedCounter > landedIterations)
+                    if (telemetry.landed && landedCounter > landedIterations)
                     {
                         BepInExPlugin.landedSend = true;
                         landedCounter = 0;
                     }
 
-                    if (BepInExPlugin.telemetry.jumped && jumpedCounter > jumpedIterations)
+                    if (telemetry.jumped && jumpedCounter > jumpedIterations)
                     {
                         BepInExPlugin.jumpedSend = true;
                         jumpedCounter = 0;
                     }
 
-                    if (BepInExPlugin.telemetry.weaponFired && weaponFiredCounter > weaponFiredIterations)
+                    if (telemetry.weaponFired && weaponFiredCounter > weaponFiredIterations)
                     {
                         BepInExPlugin.weaponFiredSend = true;
                         weaponFiredCounter = 0;
@@ -161,6 +164,10 @@ namespace IronRebellionTelemetry
         public bool landed;
         public bool jumped;
 
+        // 0 = none, -1 = left, 1 = right
+        public float stompedFoot;
+
+        public float speed;
         public TelemetryData()
         {
         }
