@@ -24,10 +24,6 @@ namespace IronRebellionTelemetry
 
         
         public static float rumbleIntensity = 0f;
-
-        
-       
-       
         public static bool mechOn = false;
         public static bool stage4Booted = false;
 
@@ -38,8 +34,6 @@ namespace IronRebellionTelemetry
         public static bool landedSend = false;
         public static bool jumpedSend = false;
         public static bool weaponFiredSend = false;
-
-        private static TelemetrySender tsender;
         
         private void Awake()
         {
@@ -47,23 +41,14 @@ namespace IronRebellionTelemetry
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
             Log.LogInfo("Finished patching.");
             
-            //tsender = new TelemetrySender();
-
             TelemetrySender.Start();
 
             Log.LogInfo("Started Telemetry Sender.");
         }
 
-        //private void FixedUpdate()
-        //{
-            
-        //    tsender?.SendTelemetry(telemetry);
-            
-        //}
-
         private void OnDestroy()
         {
-            //tsender.Stop();
+            TelemetrySender.Stop();
             Log.LogInfo("Stopped Telemetry Sender.");
         }
 
