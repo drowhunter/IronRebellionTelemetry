@@ -46,12 +46,7 @@ namespace IronRebellionTelemetry
             Log.LogInfo("Started Telemetry Sender.");
         }
 
-        private void OnDestroy()
-        {
-            TelemetrySender.Stop();
-            Log.LogInfo("Stopped Telemetry Sender.");
-        }
-
+        
         // RB Telemetry
 
         [HarmonyPatch(typeof(CockpitAnimationManager))]
