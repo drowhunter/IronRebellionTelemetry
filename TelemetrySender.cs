@@ -60,8 +60,7 @@ namespace IronRebellionTelemetry
 
                     if (telemetry.stomped)
                     {
-                        stompedCounter++;
-                        BepInExPlugin.telemetry.stompedFoot = MathF.Sign(BepInExPlugin.telemetry.stompedFoot) * ((stompedIterations - stompedCounter)/stompedIterations);
+                        stompedCounter++;                        
                     }
                     
                     if (telemetry.landed) landedCounter++;

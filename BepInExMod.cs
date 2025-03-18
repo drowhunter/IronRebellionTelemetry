@@ -25,7 +25,7 @@ namespace IronRebellionTelemetry
         
         public static float rumbleIntensity = 0f;
 
-        public static float currentTilt = 0f;
+        
        
        
         public static bool mechOn = false;
@@ -104,7 +104,7 @@ namespace IronRebellionTelemetry
                 telemetry.rotationZ = NormalizeAngle(cockpitTransform.rotation.eulerAngles.z);
                 
                 //Accessing private field
-                currentTilt = (float)currentTiltField.GetValue(__instance);
+                telemetry.adjustedTilt = (float)currentTiltField.GetValue(__instance);
 
                 //Reset signals
                 if(stompedSend)
@@ -142,7 +142,7 @@ namespace IronRebellionTelemetry
 
             private static float NormalizeAngle(float angle)
             {
-                return (angle > 180f) ? angle - 360f : angle;
+                return (angle >= 180f) ? angle - 360f : angle;
             }
 
             [HarmonyPatch(typeof(CockpitAnimationManager), "SetLean", new Type[] { typeof(float) })]
